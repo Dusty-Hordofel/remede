@@ -15,3 +15,5 @@ $ npm create vite@latest
 ```bash
 $ npm i bash sass classnames @tanstack/react-query @tanstack/router axios prop-types
 ```
+
+## Section 2: 
