@@ -1,0 +1,36 @@
+@mixin section-center {
+  // width: 86.12vw;
+  width: 90vw;
+  max-width: $max-width;
+  margin: 0 auto;
+}
+
+@mixin flex($direction: row, $justify: center, $align: center) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+}
+
+@mixin grid(
+  $rows: null,
+  $columns: null,
+  $gap: null,
+  $row-gap: null,
+  $column-gap: null
+) {
+  display: grid;
+  gap: $gap;
+  row-gap: $row-gap;
+  column-gap: $column-gap;
+  grid-template-rows: $rows;
+  grid-template-columns: $columns;
+}
+
+// @mixin grid($columns: 1, $rows: null, $gap: null) {
+//   display: grid;
+//   grid-template-columns: repeat($columns, 1fr);
+//   grid-template-rows: $rows;
+//   // grid-template-rows: repeat($rows, 1fr);
+//   grid-gap: $gap;
+// }

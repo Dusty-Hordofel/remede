@@ -1,0 +1,28 @@
+@import "/src/styles/main.scss";
+
+$primary:$sportsee-primary-purple;
+.nav{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: $primary;
+    height: 54.383px;
+    padding: 0 50px;
+    max-width: $max-width;
+    // max-width: 1440px;
+    // width: 100%;
+}
+
+.navLink{
+    text-decoration: none;
+    color: rgb(44, 62, 80);
+    font-size: 1.2rem;
+    // margin-right: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: yellow;
+    // margin-right: 0;
+    // width: 100%;
+     gap: 0.5rem;
+}

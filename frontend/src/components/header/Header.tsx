@@ -1,11 +1,9 @@
 import Logo from './logo/Logo'
 
-import logo from "../assets/argentBankLogo.png"
+import logo from "../../assets/argentBankLogo.png"
 import { NavLink } from 'react-router-dom'
-import { UserCircle } from 'lucide-react'
 import { BiSolidUserCircle } from 'react-icons/bi'
 import styles from './header.module.scss'
-
 
 
 const Header = () => {
