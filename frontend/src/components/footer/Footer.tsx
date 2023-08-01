@@ -10,4 +10,4 @@ function Footer({ content }: { content: string }) {
 
 export default Footer;
 
-{/* */ }
+

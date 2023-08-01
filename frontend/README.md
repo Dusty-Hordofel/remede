@@ -137,4 +137,63 @@ const Layout = ({ children }: { children: ReactNode }) => {
 export default Layout
 ```
 
-### 6. 
+### 6. Feature Item
+- create [FeatureItem](frontend/src/components/featureItem/FeatureItem.tsx) && [Home](frontend/src/pages/home/Home.tsx)
+
+```ts
+import React from 'react'
+import styles from './featureItem.module.scss'
+
+interface FeatureItemProps extends React.ImgHTMLAttributes<HTMLImageElement> {
+    title: string
+    description: string
+
+}
+
+const FeatureItem = ({ src, title, description, alt }: FeatureItemProps) => {
+    return (
+        <div className={styles.feature}>
+            <img src={src} alt={alt} className={styles.image} />
+            <h3 className={styles.title}>{title}</h3>
+            <p className={styles.description}>{description}</p>
+        </div>
+    )
+}
+
+export default FeatureItem
+```
+- style [featureItem](frontend/src/components/featureItem/featureItem.module.scss)
+```scss
+
+.feature{
+display: flex;
+align-items: center;
+justify-content: center;
+flex-direction: column;
+width: 531.336px;
+padding: 4rem;
+
+    .image{
+        width: 100px;
+        border: 10px solid #00bc77;
+        border-radius: 50%;
+        padding: 1.6rem;
+    }
+
+    .title{
+        color: #222;
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 0.8rem;
+    }
+
+    .description{
+        margin: 1.6rem 0 1.6rem;
+        color:rgb(44, 62, 80);
+        font-size: 1.4rem;
+    }
+
+}
+```
+### 7. Hero
+- create [Hero]()
