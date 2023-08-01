@@ -22,4 +22,6 @@ $ npm i bash sass classnames @tanstack/react-query @tanstack/router axios prop-t
 - add MongoDB database 
 
 
-## Section 2:
+## Section 2: Components
+
+### 3. 
