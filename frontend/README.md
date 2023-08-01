@@ -196,4 +196,76 @@ padding: 4rem;
 }
 ```
 ### 7. Hero
-- create [Hero]()
+- create [Hero](frontend/src/components/hero/Hero.tsx)
+```tsx
+import classNames from 'classnames'
+import styles from './hero.module.scss'
+
+const Hero = () => {
+    return (
+        <div className={styles.hero}>
+            <section className={styles.content}>
+                <h2 className={classNames("sr-only", styles.srOnly)}>Promoted Content</h2>
+                <p className={styles.subtitle}>No fees.</p>
+                <p className={styles.subtitle}>No minimum deposit.</p>
+                <p className={styles.subtitle}>High interest rates.</p>
+                <p className={styles.text}>Open a savings account with Argent Bank today!</p>
+            </section>
+
+        </div>
+    )
+}
+
+export default Hero
+```
+- style [Hero](frontend/src/components/hero/hero.module.scss)
+```scss
+.hero{
+background-image: url('../../assets/bank-tree.jpeg');
+background-position: 0 -50px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 400px;
+  position: relative;
+  width: 100%;
+
+  @media (min-width: 920px) {
+      height: 400px;
+      background-position: 0% 33%;
+    }
+  .content{
+  position: relative;
+  top: 2rem;
+  width: 200px;
+  background: white;
+  padding: 2rem;
+  text-align: left;
+  margin: 0 auto;
+  @media (min-width: 920px) {
+    position: absolute;
+    top: 50px;
+    right: 50px;
+    width: 300px;
+    margin: 2rem;
+  }
+
+  .subtitle {
+    font-weight: bold;
+    font-size: 1rem;
+    margin: 0;
+    @media (min-width: 920px) {
+        font-size: 2.4rem;
+    }
+  }
+
+  .text {
+    margin-bottom: 0;
+    margin-top: 1.9rem;
+    font-size: 0.9rem;
+    @media (min-width: 920px) {
+        font-size: 1.8rem;
+    }
+  }
+  }
+}
+```
