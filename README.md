@@ -396,6 +396,29 @@ exports.loginUser = async (req, res) => {
 }
 ```
 
+### 10. update getUserProfile
+- update [getUserProfile](backend/controllers/userController.js)
+
+```js
+exports.getUserProfile = async (req, res) => {
+    try {
+    const jwtToken = req.headers.authorization.split('Bearer')[1].trim()
+     const decodedJwtToken = jwt.decode(jwtToken)
+      const user = await User.findOne({ _id: decodedJwtToken.id })
+      
+      if (!user) {
+        throw new Error('User not found!')
+      }
+      
+      res.status(201).json({user});
+  } catch (error) {
+    console.error('Error in userService.js', error)
+    throw new Error(error)
+  }
+  
+}
+```
+
 
 ## Section 3: Redux Toolkit
 

@@ -26,14 +26,14 @@ exports.loginUser = async (req, res) => {
  
   try{
     const user = await User.findOne({ email:email })
-    console.log("🚀 ~ file: userController.js:31 ~ exports.loginUser= ~ user:", user.password)
+    // console.log("🚀 ~ file: userController.js:31 ~ exports.loginUser= ~ user:", user.password)
     
     if (!user) {
       throw new Error('User not found!')
     }
 
      const isValid = await bcrypt.compare(password, user.password)
-     console.log("🚀 ~ file: userController.js:38 ~ exports.loginUser= ~ isValid:", isValid)
+    //  console.log("🚀 ~ file: userController.js:38 ~ exports.loginUser= ~ isValid:", isValid)
 
     if (!isValid) {
       throw new Error('Password is invalid')
@@ -46,14 +46,13 @@ exports.loginUser = async (req, res) => {
       { expiresIn: '1d' }
     ) 
 
-    res.cookie('token', token, { httpOnly: true, sameSite: 'strict' }).status(201).json({ message: 'Logged in successfully' });
+    console.log("🚀 ~ file: userController.js:48 ~ exports.loginUser= ~ token:", token)
 
+    // res.cookie('token', token, { httpOnly: true, sameSite: 'strict' }).status(201).json({ message: 'Logged in successfully' });
     // res.cookie('token', token, { httpOnly: true, sameSite: 'strict' }).send('Logged in successfully');
-
-    // console.log("🚀 ~ file: userController.js:50 ~ exports.loginUser= ~ token:", token)
-    // res.status(201).json(token);
+    // return {token}
    
-    // return { token }
+    res.status(201).json({token})
 
   }  catch (error) {
     console.error('Error in userService.js', error)
@@ -62,22 +61,40 @@ exports.loginUser = async (req, res) => {
 }
 
 
-module.exports.getUserProfile = async (req, res) => {
-  let response = {}
-
-  try {
-    const responseFromService = await userService.getUserProfile(req)
-    response.status = 200
-    response.message = 'Successfully got user profile data'
-    response.body = responseFromService
+exports.getUserProfile = async (req, res) => {
+    try {
+    const jwtToken = req.headers.authorization.split('Bearer')[1].trim()
+     const decodedJwtToken = jwt.decode(jwtToken)
+      const user = await User.findOne({ _id: decodedJwtToken.id })
+      
+      if (!user) {
+        throw new Error('User not found!')
+      }
+      
+      res.status(201).json({user});
   } catch (error) {
-    console.log('Error in userController.js')
-    response.status = 400
-    response.message = error.message
+    console.error('Error in userService.js', error)
+    throw new Error(error)
   }
-
-  return res.status(response.status).send(response)
+  
 }
+
+
+// exports.getUserProfile = async (req, res) => {
+//   try {
+//     const user = await User.findById(req.userId);
+
+//     if (!user) {
+//       return res.status(404).json({ message: 'User not found' });
+//     }
+
+//     res.json({ user });
+//   } catch (error) {
+//     console.error('Error retrieving user profile', error);
+//     res.status(500).json({ message: 'Internal server error' });
+//   }
+// }
+
 
 module.exports.updateUserProfile = async (req, res) => {
   let response = {}
