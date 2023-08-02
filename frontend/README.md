@@ -269,3 +269,88 @@ background-position: 0 -50px;
   }
 }
 ```
+
+### 8. Login
+
+- install react-hook-form
+```bash
+$ npm install react-hook-form
+```
+- create [LoginForm](frontend/src/components/login/LoginForm.tsx) 
+```ts
+import React from 'react';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+// import { z } from 'zod';
+import { LoginFormSchema, LoginFormValues } from '../../validators/schema-validator';
+import styles from './loginForm.module.scss';
+
+
+const LoginForm: React.FC = () => {
+    const {
+        handleSubmit,
+        register,
+        formState: { errors },
+    } = useForm<LoginFormValues>({
+        resolver: zodResolver(LoginFormSchema),
+        defaultValues: {
+            rememberMe: false,
+        },
+    });
+
+    const onSubmit: SubmitHandler<LoginFormValues> = (data) => {
+        // You can directly access the data object which includes the checkbox value
+        console.log(data);
+    };
+
+    return (
+        <div className={styles.form}>
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <div className={styles.input}>
+                    <label>Nom d'utilisateur</label>
+                    <input {...register('email')} />
+                    {errors.email && <p>{errors.email.message}</p>}
+                </div>
+
+                <div className={styles.input}>
+                    <label>Mot de passe</label>
+                    <input type="password" {...register('password')} />
+                    {errors.password && <p>{errors.password.message}</p>}
+                </div>
+
+                <div className={styles.souvenir}>
+                    <input type="checkbox" {...register('rememberMe')} id="check" />
+                    <label htmlFor='check'>
+                        Se souvenir de moi
+                    </label>
+                </div>
+
+                <button type="submit">Se connecter</button>
+            </form>
+        </div>
+    );
+};
+
+export default LoginForm;
+
+```
+- create [login]() page
+```ts
+import { BiSolidUserCircle } from 'react-icons/bi'
+import LoginForm from '../../components/login/LoginForm'
+import styles from './login.module.scss'
+
+const Login = () => {
+    return (
+        <div className={styles.login}>
+            <div className={styles.forms}>
+                <BiSolidUserCircle className={styles.icon} />
+                <h1 className={styles.title}>Sign In</h1>
+                <LoginForm />
+            </div>
+        </div>
+    )
+}
+
+export default Login
+```

@@ -1,0 +1,31 @@
+.form{
+
+    .input{
+        margin-bottom: 1rem;
+    }
+  .souvenir{
+    display: flex;
+    align-items: center;
+    gap:1rem;
+    input{
+        width: 15px;
+        height: 15px;
+  border: 2px solid black;
+  background-color: white;
+  border-radius: 4px;
+    }
+
+  }
+
+  button{
+        display: block;
+        width: 100%;
+        padding: 8px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        margin-top: 1rem;
+        border-color: #00bc77;
+        background-color: #00bc77;
+        color: #fff; 
+  }
+}
