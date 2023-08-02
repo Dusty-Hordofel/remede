@@ -48,23 +48,7 @@ const LoginForm: React.FC = () => {
     });
 
     const onSubmit: SubmitHandler<LoginFormValues> = async (data) => {
-        console.log("🚀 ~ file: LoginForm.tsx:51 ~ constonSubmit:SubmitHandler<LoginFormValues>= ~ data:", data)
-        // You can directly access the data object which includes the checkbox value
-        // const { email, password } = data
-        // console.log("🚀 ~ file: LoginForm.tsx:36 ~ constonSubmit:SubmitHandler<LoginFormValues>= ~ email:", { email, password })
-        // try {
-        //     const response = await axios.post("http://localhost:3001/api/v1/user/login", { email, password }, { withCredentials: true });
-        //     const { token } = response.data
-
-        //     console.log('Réponse de l\'API:', token);
-        //     dispatch(userInfos({ email, password, token }))
-
-        // } catch (error) {
-        //     console.log("🚀 ~ file: LoginForm.tsx:41 ~ constonSubmit:SubmitHandler<LoginFormValues>= ~ error:", error)
-        // }
-
         dispatch(login(data))
-
     };
 
     return (
