@@ -1,4 +1,6 @@
 const mongoose = require('mongoose')
+// const databaseUrl = process.env.DATABASE_URL ||"mongodb://localhost/argentBankDB";
+// const databaseUrl = process.env.DATABASE_URL ||"mongodb://localhost/argentBankDB";
 const databaseUrl = process.env.DATABASE_URL ||"mongodb+srv://hordofel:maman123@cluster0.wamlk.mongodb.net/argentBankDB"
   // || 'mongodb://localhost/argentBankDB'
 

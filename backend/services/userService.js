@@ -45,6 +45,7 @@ module.exports.getUserProfile = async serviceData => {
 }
 
 module.exports.loginUser = async serviceData => {
+  console.log(serviceData.email)
   try {
     const user = await User.findOne({ email: serviceData.email })
 
@@ -58,12 +59,14 @@ module.exports.loginUser = async serviceData => {
       throw new Error('Password is invalid')
     }
 
+    // creation of token
     const token = jwt.sign(
       { id: user._id },
       process.env.SECRET_KEY || 'default-secret-key',
       { expiresIn: '1d' }
-    )
+    ) 
 
+  //return token
     return { token }
   } catch (error) {
     console.error('Error in userService.js', error)
