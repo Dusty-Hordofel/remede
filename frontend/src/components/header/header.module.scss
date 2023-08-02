@@ -1,0 +1,20 @@
+@import "/src/styles/main.scss";
+
+.nav{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 54.383px;
+    padding: 0 50px;
+    max-width: $max-width;
+}
+
+.navLink{
+    text-decoration: none;
+    color: rgb(44, 62, 80);
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+     gap: 0.5rem;
+}

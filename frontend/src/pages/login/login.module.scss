@@ -1,0 +1,27 @@
+.login{
+    background: plum;
+    height: calc(100vh - 3rem);
+    .forms{
+        position: relative;
+        top: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        flex-direction: column;
+        background-color: white;
+        width: 300px;
+        margin: 0 auto;
+        // margin-top: 13rem;
+        padding: 2rem;
+
+        .icon{
+            font-size: 2.4rem;
+        }
+
+        .title{
+        margin:2rem;
+        color:rgb(44, 62, 80)
+        }
+    }
+}
