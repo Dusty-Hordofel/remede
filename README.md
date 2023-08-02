@@ -422,12 +422,113 @@ exports.getUserProfile = async (req, res) => {
 
 ## Section 3: Redux Toolkit
 
-8. 
+### 11. Store  
 
 - install redux toolkit
   
 ```bash
 $ npm i @reduxjs/toolkit react-redux redux-persist
 ```
-- update Backend Folder
+- create [store](frontend/src/app/store.ts)
+```ts
+import { configureStore } from "@reduxjs/toolkit";
+import authReducer from '../features/auth/authSlice';
+import storage from 'redux-persist/lib/storage'
+import {
+  persistStore,
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from "redux-persist";
+
+const persistConfig = {
+  key: "root",
+  version: 1,
+   storage: storage,
+};
+
+const persistedReducer = persistReducer(persistConfig, authReducer);
+
+export const store = configureStore({
+  reducer: {
+    auth: persistedReducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
+});
+
+export let persistor = persistStore(store);
+
+// Infer the `RootState` and `AppDispatch` types from the store itself
+export type RootState = ReturnType<typeof store.getState>;
+// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
+export type AppDispatch = typeof store.dispatch;
+
+```
+- create [AuthSlice](frontend/src/features/auth/authSlice.ts)
+```ts
+import { createSlice, nanoid, createAsyncThunk } from '@reduxjs/toolkit'
+
+
+interface UserState { 
+    token:string
+    email: string,
+    password: string,
+  }
+
+const initialState: UserState = {
+    token:"",
+    email: "",
+    password: "",
+    
+  };
+
+  export const authSlice = createSlice({
+  name: "auth",
+  initialState,
+  reducers: {
+    userInfos: (state, action) => {
+        state.token = action.payload.token
+        state.email = action.payload.email;
+        state.password = action.payload.password;
+      },
+  }})
+
+
+  export const {
+    userInfos
+  } = authSlice.actions;
+  export default authSlice.reducer;
+  
+```
+- add Store [Provider](frontend/src/main.tsxfrontend/src/main.tsx)
+```ts
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App.tsx'
+import { Provider as ReduxProvider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import { persistor, store } from './app/store.ts';
+
+
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <ReduxProvider store={store}>
+      <PersistGate persistor={persistor} loading={null}>
+        <App />
+      </PersistGate>
+    </ReduxProvider>
+  </React.StrictMode>,
+)
+
+``` 
   
