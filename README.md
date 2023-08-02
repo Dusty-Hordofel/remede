@@ -531,4 +531,69 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 )
 
 ``` 
-  
+### 12. user authentication
+
+-  create [login](frontend/src/features/auth/authSlice.js)
+```ts
+  export const login = createAsyncThunk("auth/login",async(data, { rejectWithValue } ) => {
+    const {email,password} = data
+
+    try{
+      const response = await axios.post(`${url}/login`, { email, password }, { withCredentials: true });
+       const { token } = response.data
+   
+      if(token){
+        const userData = await getUserData(token)
+        const {lastName,firstName} = userData
+
+         const userPayload = {
+          token: token, 
+          firstName: firstName, 
+          lastName: lastName 
+      }
+        
+      return userPayload
+
+      }
+
+    }catch(error){
+      console.log("🚀 ~ file: authSlice.ts:22 ~ login ~ error:", error)
+      return rejectWithValue({message:error});
+      
+    }
+
+
+  })
+
+```
+-  create [login](frontend/src/features/auth/authSlice.js)
+```js
+  async function getUserData(token) {
+    try {
+        const response = await fetch(
+            `${url}/profile`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        )
+        const data = await response.json() 
+        return data
+        // return userInfo
+    } catch ( error ) {
+        console.log(error)
+    }
+}
+```
+
+### 13. 
+### 14.
+### 15.
+### 16.
+### 17.
+### 18.
+### 19.
+

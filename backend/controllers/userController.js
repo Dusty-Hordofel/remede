@@ -66,12 +66,13 @@ exports.getUserProfile = async (req, res) => {
     const jwtToken = req.headers.authorization.split('Bearer')[1].trim()
      const decodedJwtToken = jwt.decode(jwtToken)
       const user = await User.findOne({ _id: decodedJwtToken.id })
+      const {firstName,lastName,...rest} = user
       
       if (!user) {
         throw new Error('User not found!')
       }
       
-      res.status(201).json({user});
+      res.status(201).json({firstName,lastName});
   } catch (error) {
     console.error('Error in userService.js', error)
     throw new Error(error)

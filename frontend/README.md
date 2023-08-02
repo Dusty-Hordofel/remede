@@ -362,4 +362,5 @@ export default Login
 - install redux toolkit
   
 ```bash
+$ npm i @reduxjs/toolkit react-redux redux-persist
 ```

@@ -6,7 +6,7 @@ import { LoginFormSchema, LoginFormValues } from '../../validators/schema-valida
 import styles from './loginForm.module.scss';
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { userInfos } from '../../features/auth/authSlice';
+import { login, userInfos } from '../../features/auth/authSlice';
 
 // type FormValues = {
 //     username: string;
@@ -31,8 +31,8 @@ export interface StateProps {
 
 const LoginForm: React.FC = () => {
 
-    const { email, password, token } = useSelector((state: StateProps) => state.auth)
-    console.log("🚀 ~ file: LoginForm.tsx:30 ~ sto:", { email, password, token })
+    const { firstName, lastName, token } = useSelector((state: StateProps) => state.auth)
+    console.log("🚀 ~ file: LoginForm.tsx:30 ~ sto:", { lastName, firstName, token })
     const dispatch = useDispatch();
 
 
@@ -48,19 +48,22 @@ const LoginForm: React.FC = () => {
     });
 
     const onSubmit: SubmitHandler<LoginFormValues> = async (data) => {
+        console.log("🚀 ~ file: LoginForm.tsx:51 ~ constonSubmit:SubmitHandler<LoginFormValues>= ~ data:", data)
         // You can directly access the data object which includes the checkbox value
-        const { email, password } = data
-        console.log("🚀 ~ file: LoginForm.tsx:36 ~ constonSubmit:SubmitHandler<LoginFormValues>= ~ email:", { email, password })
-        try {
-            const response = await axios.post("http://localhost:3001/api/v1/user/login", { email, password }, { withCredentials: true });
-            const { token } = response.data
+        // const { email, password } = data
+        // console.log("🚀 ~ file: LoginForm.tsx:36 ~ constonSubmit:SubmitHandler<LoginFormValues>= ~ email:", { email, password })
+        // try {
+        //     const response = await axios.post("http://localhost:3001/api/v1/user/login", { email, password }, { withCredentials: true });
+        //     const { token } = response.data
 
-            console.log('Réponse de l\'API:', token);
-            dispatch(userInfos({ email, password, token }))
+        //     console.log('Réponse de l\'API:', token);
+        //     dispatch(userInfos({ email, password, token }))
 
-        } catch (error) {
-            console.log("🚀 ~ file: LoginForm.tsx:41 ~ constonSubmit:SubmitHandler<LoginFormValues>= ~ error:", error)
-        }
+        // } catch (error) {
+        //     console.log("🚀 ~ file: LoginForm.tsx:41 ~ constonSubmit:SubmitHandler<LoginFormValues>= ~ error:", error)
+        // }
+
+        dispatch(login(data))
 
     };
 
