@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 // import { z } from 'zod';
 import { LoginFormSchema, LoginFormValues } from '../../validators/schema-validator';
 import styles from './loginForm.module.scss';
+import axios from "axios";
 
 // type FormValues = {
 //     username: string;
@@ -29,9 +30,19 @@ const LoginForm: React.FC = () => {
         },
     });
 
-    const onSubmit: SubmitHandler<LoginFormValues> = (data) => {
+    const onSubmit: SubmitHandler<LoginFormValues> = async (data) => {
         // You can directly access the data object which includes the checkbox value
-        console.log(data);
+        const { email, password } = data
+        console.log("🚀 ~ file: LoginForm.tsx:36 ~ constonSubmit:SubmitHandler<LoginFormValues>= ~ email:", { email, password })
+        try {
+            const response = await axios.post("http://localhost:3001/api/v1/user/login", { email, password }, { withCredentials: true });
+
+            console.log('Réponse de l\'API:', response.data);
+
+        } catch (error) {
+            console.log("🚀 ~ file: LoginForm.tsx:41 ~ constonSubmit:SubmitHandler<LoginFormValues>= ~ error:", error)
+        }
+
     };
 
     return (

@@ -354,3 +354,12 @@ const Login = () => {
 
 export default Login
 ```
+
+## Section 3: Redux Toolkit
+
+8. 
+
+- install redux toolkit
+  
+```bash
+```
