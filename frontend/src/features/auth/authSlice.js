@@ -64,7 +64,6 @@ const initialState = {
         )
         const data = await response.json() 
         return data
-        // return userInfo
     } catch ( error ) {
         console.log(error)
     }
@@ -75,8 +74,6 @@ export const updateUserName = createAsyncThunk(
   "auth/updateUserName",
   async(data, { rejectWithValue } ) => {
     const {firstName,lastName,token} = data
-    // const updatedUser = {email,password}
-    console.log("🚀 ~ file: authSlice.js:78 ~ async ~ data:", data)
 
     try {
       const response = await fetch(
@@ -91,10 +88,9 @@ export const updateUserName = createAsyncThunk(
           }
       )
       const data = await response.json() 
-      console.log("🚀 ~ file: authSlice.js:93 ~ async ~ data:", data)
       return data
   } catch (error) {
-      console.log(error)
+      console.log("🚀 ~ file: authSlice.js:93 ~ async ~ error:", error)
       return rejectWithValue({message:error});
   }
   }

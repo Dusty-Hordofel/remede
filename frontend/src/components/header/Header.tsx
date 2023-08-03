@@ -21,7 +21,7 @@ const Header = () => {
             </NavLink>) : (
                 <div className={styles.links}>
 
-                    <NavLink to="/" className={styles.navLink}  >
+                    <NavLink to="/profile" className={styles.navLink}  >
                         <div className={styles.logout}>
                             <FaUserCircle style={{ fontSize: '24px' }} /> {firstName}
                         </div>

@@ -28,7 +28,7 @@ const Profile = () => {
     return (
         <div className={styles.profile}>
             <Welcome firstName={editFirstName} lastName={editLastName} />
-            {edit && <EditNameForm firstName={editFirstName} lastName={editLastName} setEditFistName={setEditFistName} setEditLastName={setEditLastName} />}
+            {edit && <EditNameForm firstName={editFirstName} lastName={editLastName} setEditFistName={setEditFistName} setEditLastName={setEditLastName} setEdit={setEdit} />}
             {!edit && <button className={styles.button} onClick={() => setEdit(true)}>Edit Name</button>}
             <AccountTransaction accountTitle="Argent Bank Checking (x8349)" accountAmount="$2,082.79" accountAmountDescription="Available Balance" />
             <AccountTransaction accountTitle="Argent Bank Savings (x6712)"

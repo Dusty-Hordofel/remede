@@ -11,11 +11,12 @@ interface EditNameFormProps {
     lastName: string,
     setEditFistName: React.Dispatch<React.SetStateAction<string>>;
     setEditLastName: React.Dispatch<React.SetStateAction<string>>;
+    setEdit: React.Dispatch<React.SetStateAction<boolean>>
 
 
 
 }
-function EditNameForm({ firstName, lastName, setEditFistName, setEditLastName }: EditNameFormProps) {
+function EditNameForm({ firstName, lastName, setEditFistName, setEditLastName, setEdit }: EditNameFormProps) {
     const { register, handleSubmit, formState: { errors }, setValue } = useForm();
 
     const { token } = useSelector((state: StateProps) => state.auth)
@@ -32,9 +33,10 @@ function EditNameForm({ firstName, lastName, setEditFistName, setEditLastName }:
         setEditLastName(data.lastName)
         const updatedUser = { token, lastName, firstName }
         dispatch(updateUserName(updatedUser))
-        console.log("🚀 ~ file: EditNameForm.tsx:35 ~ onSubmit ~ updatedUser:", updatedUser)
+        setEdit(false)
+        // console.log("🚀 ~ file: EditNameForm.tsx:35 ~ onSubmit ~ updatedUser:", updatedUser)
 
-        console.log(data); // Vous pouvez effectuer ici la logique d'envoi des données, par exemple, en utilisant une requête axios
+        // console.log(data); // Vous pouvez effectuer ici la logique d'envoi des données, par exemple, en utilisant une requête axios
     };
 
     React.useEffect(() => {
@@ -97,82 +99,3 @@ function EditNameForm({ firstName, lastName, setEditFistName, setEditLastName }:
 
 export default EditNameForm;
 
-
-
-// import React from 'react';
-// import { useForm, SubmitHandler } from 'react-hook-form';
-// import { zodResolver } from '@hookform/resolvers/zod';
-// // import { z } from 'zod';
-// import { EditNameFormSchema, EditNameFormValues, LoginFormSchema, LoginFormValues } from '../../validators/schema-validator';
-// import styles from './editNameForm.module.scss';
-// import axios from "axios";
-// // import { useDispatch, useSelector } from "react-redux";
-// // import { login, userInfos } from '../../features/auth/authSlice';
-
-// // type FormValues = {
-// //     username: string;
-// //     password: string;
-// //     rememberMe: boolean;
-// // };
-
-// // const schema = z.object({
-// //     username: z.string().nonempty('Le nom d\'utilisateur est requis.'),
-// //     password: z.string().nonempty('Le mot de passe est requis.'),
-// //     rememberMe: z.boolean(), // Add the rememberMe field in the Zod schema
-// // });
-// export interface StateProps {
-//     token: string,
-//     email: string,
-//     password: string,
-//     firstName: string,
-//     lastName: string,
-//     auth: any;
-// }
-
-
-// const EditNameForm: React.FC = () => {
-
-//     const {
-//         handleSubmit,
-//         register,
-//         formState: { errors },
-//     } = useForm<EditNameFormValues>({
-//         resolver: zodResolver(EditNameFormSchema),
-//         // defaultValues: {
-//         //     rememberMe: false,
-//         // },
-//     });
-
-//     const onSubmit: SubmitHandler<EditNameFormValues> = async (data) => {
-//         console.log("🚀 ~ file: EditNameForm.tsx:51 ~ constonSubmit:SubmitHandler<EditNameFormValues>= ~ data:", data)
-//         // dispatch(login(data))
-//     };
-
-//     return (
-//         <>
-//             <div className={styles.form}>
-//                 <form onSubmit={handleSubmit(onSubmit)}>
-//                     <div className={styles.input}>
-//                         <label>firstName</label>
-//                         <input {...register('firstName')} />
-//                         {errors.firstName && <p>{errors.firstName.message}</p>}
-//                     </div>
-//                     <div className={styles.input}>
-//                         <label>lastName</label>
-//                         <input {...register('lastName')} />
-//                         {errors.lastName && <p>{errors.lastName.message}</p>}
-//                     </div>
-
-//                     {/* <div className={styles.input}>
-//                         <label>lastName</label>
-//                         <input type="lastName" {...register('lastName')} />
-//                         {errors.lastName && <p>{errors.lastName.message}</p>}
-//                     </div> */}
-//                     <button type="submit">Modifier</button>
-//                 </form>
-//             </div>
-//         </>
-//     );
-// };
-
-// export default EditNameForm;
