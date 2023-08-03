@@ -6,7 +6,7 @@ import { LoginFormSchema, LoginFormValues } from '../../validators/schema-valida
 import styles from './loginForm.module.scss';
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { login, userInfos } from '../../features/auth/authSlice';
+import { login } from '../../features/auth/authSlice';
 
 // type FormValues = {
 //     username: string;

@@ -14,7 +14,7 @@ const Login = () => {
         if (token) {
             navigate("/profile")
         }
-    }, [])
+    }, [token])
 
     return (
         <div className={styles.login}>

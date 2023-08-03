@@ -1,0 +1,49 @@
+
+.form{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin-bottom: 2rem;
+
+    .name{
+         display: flex;
+         align-items: center;
+         justify-content: center;
+        // background: rebeccapurple;
+        gap:3rem;
+        color:white;
+    
+        .input{
+            label{
+                display: block;
+                margin-right: 10px;
+                padding:20px;
+                width: fit-content;
+            }
+    
+            // .inputGroup{
+            //     df
+            // }
+    
+                
+            input{
+                padding: 1rem;
+                outline: none;    
+            }
+    
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    
+        button{
+     width: fit-content;
+      border-color: rgb(0, 188, 119);
+      background-color: rgb(0, 188, 119);
+      color: rgb(255, 255, 255);
+      font-weight: bold;
+      padding: 1.5rem 2.5rem;
+        }
+    }
+}
+

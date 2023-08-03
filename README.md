@@ -797,16 +797,161 @@ exports.updateUserProfile = async (req,res) => {
 
 ```
 
-### 16.
-- []()
+### 16. update User Name
+- [EditNameForm](frontend/src/components/editName/EditNameForm.tsx)
 ```ts
+import React from 'react';
+import { useForm } from 'react-hook-form';
+import styles from './editNameForm.module.scss';
+
+interface EditNameFormProps {
+    firstName: string,
+    lastName: string,
+    setEditFistName: React.Dispatch<React.SetStateAction<string>>;
+    setEditLastName: React.Dispatch<React.SetStateAction<string>>;
+
+
+
+}
+function EditNameForm({ firstName, lastName, setEditFistName, setEditLastName }: EditNameFormProps) {
+    const { register, handleSubmit, formState: { errors }, setValue } = useForm();
+
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = event.target;
+        setEditLastName(value);
+        // setValue(name, value);
+    };
+
+    const onSubmit = (data: any) => {
+        // setEditLastName(data.lastName)
+        console.log(data); // Vous pouvez effectuer ici la logique d'envoi des données, par exemple, en utilisant une requête axios
+    };
+
+    React.useEffect(() => {
+        setValue('firstName', firstName);
+        setValue('lastName', lastName);
+    }, [setValue]);
+
+    return (
+        <div>
+            <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+                <div className={styles.name}>
+                    <div className={styles.input}>
+                        <label htmlFor="lastName">lastName:</label>
+                        <input
+                            type="text"
+                            id="lastName"
+                            {...register('lastName', {
+                                required: true,
+                                minLength: 2,
+                                pattern: /^[A-Za-z\s]*$/,
+                            })}
+                            onChange={handleInputChange}
+                        />
+                        {errors.lastName && (
+                            <p style={{ color: 'red' }}>
+                                {errors.lastName.type === 'required' && 'Le nom de famille est requis'}
+                                {errors.lastName.type === 'minLength' && 'Le nom de famille doit comporter au moins 2 caractères'}
+                                {errors.lastName.type === 'pattern' && 'Le nom de famille ne doit pas contenir de symboles'}
+                            </p>
+                        )}
+                    </div>
+
+                    <button type="submit">Save</button>
+                </div>
+            </form>
+        </div>
+    );
+}
+
+export default EditNameForm;
+
 ```
-- []()
+- [editNameForm](frontend/src/components/editName/editNameForm.module.scss)
 ```ts
+
+.form{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin-bottom: 2rem;
+
+    .name{
+         display: flex;
+         align-items: center;
+         justify-content: center;
+        // background: rebeccapurple;
+        gap:3rem;
+        color:white;
+    
+        .input{
+            label{
+                display: block;
+                margin-right: 10px;
+                padding:20px;
+                width: fit-content;
+            }
+    
+            // .inputGroup{
+            //     df
+            // }
+    
+                
+            input{
+                padding: 1rem;
+                outline: none;    
+            }
+    
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    
+        button{
+     width: fit-content;
+      border-color: rgb(0, 188, 119);
+      background-color: rgb(0, 188, 119);
+      color: rgb(255, 255, 255);
+      font-weight: bold;
+      padding: 1.5rem 2.5rem;
+        }
+    }
+}
 ```
-- []()
+- [updateUserName](frontend/src/features/auth/authSlice.js)
 ```ts
+
+export const updateUserName = createAsyncThunk(
+  "auth/updateUserName",
+  async(data, { rejectWithValue } ) => {
+    const {firstName,lastName,token} = data
+    // const updatedUser = {email,password}
+    console.log("🚀 ~ file: authSlice.js:78 ~ async ~ data:", data)
+
+    try {
+      const response = await fetch(
+          `${url}/profile`,
+          {
+              method: 'PUT',
+              headers: {
+                  'Content-type': 'application/json',
+                  'Authorization': `Bearer ${token}`
+              },
+              body: JSON.stringify({firstName,lastName})
+          }
+      )
+      const data = await response.json() 
+      console.log("🚀 ~ file: authSlice.js:93 ~ async ~ data:", data)
+      return data
+  } catch (error) {
+      console.log(error)
+      return rejectWithValue({message:error});
+  }
+  }
+)
+
 ```
+
 ### 17.
 ### 18.
 ### 19.

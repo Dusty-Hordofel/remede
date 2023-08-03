@@ -70,15 +70,48 @@ const initialState = {
     }
 }
 
+
+export const updateUserName = createAsyncThunk(
+  "auth/updateUserName",
+  async(data, { rejectWithValue } ) => {
+    const {firstName,lastName,token} = data
+    // const updatedUser = {email,password}
+    console.log("🚀 ~ file: authSlice.js:78 ~ async ~ data:", data)
+
+    try {
+      const response = await fetch(
+          `${url}/profile`,
+          {
+              method: 'PUT',
+              headers: {
+                  'Content-type': 'application/json',
+                  'Authorization': `Bearer ${token}`
+              },
+              body: JSON.stringify({firstName,lastName})
+          }
+      )
+      const data = await response.json() 
+      console.log("🚀 ~ file: authSlice.js:93 ~ async ~ data:", data)
+      return data
+  } catch (error) {
+      console.log(error)
+      return rejectWithValue({message:error});
+  }
+  }
+)
+
+
   export const authSlice = createSlice({
   name: "auth",
   initialState,
    reducers: {
-    // userInfos: (state, action) => {
-    //     state.token = action.payload.token
-    //     state.email = action.payload.email;
-    //     state.password = action.payload.password;
-    //   },   
+    signOut: (state) => {
+        state.token = null
+        state.firstName = null
+        state.firstName = null
+        state.loginError = null
+       
+      },   
    },
   extraReducers: (builder) => {
     builder.addCase(login.pending,(state,action) =>{
@@ -87,7 +120,6 @@ const initialState = {
     })
     
     builder.addCase(login.fulfilled,(state,action) => {
-        console.log("🚀 ~ file: authSlice.js:59 ~ builder.addCase ~ action:", action.payload)
         state.token = action.payload.token
         state.lastName = action.payload.lastName;
         state.firstName = action.payload.firstName;
@@ -100,23 +132,31 @@ const initialState = {
     }
 )
 
+builder.addCase(updateUserName.pending,(state,action) =>{
+  state.loginError === null
+
+})
+
+builder.addCase(updateUserName.fulfilled,(state,action) => {
+  const {user} = action.payload
+  state.lastName = user.lastName;
+  state.firstName = user.firstName;
+  
+} )
+
+builder.addCase( updateUserName.rejected, ( state, action ) =>
+    {
+        state.loginError = action.payload.message
+    }
+)
+
   }
 
 })
-  // export const authSlice = createSlice({
-  // name: "auth",
-  // initialState,
-  // reducers: {
-  //   userInfos: (state, action) => {
-  //       state.token = action.payload.token
-  //       state.email = action.payload.email;
-  //       state.password = action.payload.password;
-  //     },
-  // }})
-
+  
 
   export const {
-    // userInfos
+    signOut
   } = authSlice.actions;
   // export const selectUser = (state: RootState) => state.auth.token; // Assurez-vous que vous utilisez RootState ici
 

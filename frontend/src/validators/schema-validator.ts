@@ -14,17 +14,16 @@ export const LoginFormSchema = z.object({
   .toLowerCase(),
   password: z.string().nonempty("Veuillez fournir un mot de passe").min(6,  "Le mot de passe doit contenir au moins 6 caractères"),
   rememberMe: z.boolean(), 
-  // rememberMe: z.boolean().optional(),
-  // password: z
-  // .string()
-  // .min(8, "Le mot de passe doit contenir au moins 8 caractères")
-  // .regex(
-  //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/,
-  //   "Le mot de passe doit contenir au moins une lettre minuscule, une lettre majuscule, un chiffre et un caractère spécial"
-  // )
-  // .nonempty({ message: "Veuillez fournir un mot de passe" }),
 });
+
+export const EditNameFormSchema = z.object({
+  firstName: z.string().min(2, "Le prénom doit comporter au moins 2 caractères").regex(/^[A-Za-z\s]*$/, "Le prénom ne doit pas contenir de symboles"),
+  lastName: z.string().min(2, "Le nom de famille doit comporter au moins 2 caractères").regex(/^[A-Za-z\s]*$/, "Le nom de famille ne doit pas contenir de symboles"),
+});
+
+
 
 
 // type of the request
 export type LoginFormValues = z.infer<typeof LoginFormSchema>;
+export type EditNameFormValues = z.infer<typeof EditNameFormSchema>

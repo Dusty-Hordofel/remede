@@ -5,12 +5,14 @@ import { NavLink } from 'react-router-dom'
 import { BiSolidUserCircle } from 'react-icons/bi'
 import { FaUserCircle, FaSignOutAlt } from 'react-icons/fa'
 import styles from './header.module.scss'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { StateProps } from '../login/LoginForm'
+import { signOut } from '../../features/auth/authSlice.js'
 
 
 const Header = () => {
     const { firstName, token } = useSelector((state: StateProps) => state.auth)
+    const dispatch = useDispatch()
     return (
         <nav className={styles.nav}>
             <Logo src={logo} title='Argent Bank' alt="Argent Bank Logo" width={200} height={54.383} />
@@ -27,7 +29,7 @@ const Header = () => {
                     </NavLink>
                     <NavLink to="/" className={styles.navLink}  >
 
-                        <div className={styles.logout}>
+                        <div className={styles.logout} onClick={() => dispatch(signOut())}>
                             <FaSignOutAlt style={{ fontSize: '24px' }} /> Sign Out
                         </div>
                     </NavLink>
