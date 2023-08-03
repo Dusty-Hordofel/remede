@@ -22,7 +22,7 @@ module.exports.createUser = async (req, res) => {
 }
 
 exports.loginUser = async (req, res) => {
-  const {email,password} = req.body
+  const {email,password,rememberMe} = req.body
  
   try{
     const user = await User.findOne({ email:email })
@@ -33,17 +33,18 @@ exports.loginUser = async (req, res) => {
     }
 
      const isValid = await bcrypt.compare(password, user.password)
-    //  console.log("🚀 ~ file: userController.js:38 ~ exports.loginUser= ~ isValid:", isValid)
-
+   
     if (!isValid) {
       throw new Error('Password is invalid')
     }
 
     // creation of token
+    const expiresIn = rememberMe ? 60 * 60 * 24 : 60 * 60; // 1 jour ou 1 heure
+
     const token = jwt.sign(
       { id: user._id },
       process.env.SECRET_KEY || 'default-secret-key',
-      { expiresIn: '1d' }
+      { expiresIn: expiresIn }
     ) 
 
     console.log("🚀 ~ file: userController.js:48 ~ exports.loginUser= ~ token:", token)

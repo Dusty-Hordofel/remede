@@ -48,6 +48,7 @@ const LoginForm: React.FC = () => {
     });
 
     const onSubmit: SubmitHandler<LoginFormValues> = async (data) => {
+        console.log("🚀 ~ file: LoginForm.tsx:51 ~ constonSubmit:SubmitHandler<LoginFormValues>= ~ data:", data)
         dispatch(login(data))
     };
 
