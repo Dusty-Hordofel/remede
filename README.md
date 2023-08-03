@@ -634,7 +634,134 @@ const Header = () => {
 
 export default Header
 ```
-### 14. Profile
+### 14. AccountTransaction
+
+- create [AccountTransaction](frontend/src/components/accountTransaction/AccountTransaction.tsx)
+
+```tsx
+import classNames from "classnames"
+import { AccountTransactionProps } from "../../../type"
+import styles from "./accountTransaction.module.scss"
+
+const AccountTransaction: React.FC<AccountTransactionProps> = ({ accountTitle, accountAmount, accountAmountDescription }) => {
+    return (
+        <section className={styles.account}>
+            <div className={styles.content}>
+                <h3 className={styles.title}>{accountTitle}</h3>
+                <p className={styles.amount}>{accountAmount}</p>
+                <p className={styles.description}>{accountAmountDescription}</p>
+            </div>
+            <div className={classNames(styles.ol)}>
+                <button className={styles.button}>View transactions</button>
+            </div>
+        </section>
+    )
+}
+
+export default AccountTransaction
+```
+
+- style [AccountTransaction](frontend/src/components/accountTransaction/accountTransaction.module.scss)
+
+```scss
+.account {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid black;
+    background-color: #fff;
+    width: 80%;
+    margin: 0 auto;
+    flex-direction: column;
+    padding: 1.5rem;
+    box-sizing: border-box;
+    text-align: left;
+    margin-bottom: 2rem;
+
+    @media (min-width: 720px) {
+        flex-direction: row;
+  }
+
+      
+  .content {
+    width: 100%;
+    flex: 1;
+    .amount {
+      margin: 0;
+      font-size: 4rem;
+      font-weight: 600;
+      color:rgb(44, 62, 80);
+      padding: 1rem
+  
+  }}
+    
+    .description {
+      margin: 0;
+    }
+    
+    .title,.description {
+      margin: 0;
+      padding: 0;
+      font-size: 1rem;
+      font-weight: normal;
+  }
+
+  .button {
+    display: block;
+    width: 100%;
+    padding: 13px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-top: 1rem;
+    border-color: #00bc77;
+    background-color: #00bc77;
+    color: #fff;
+
+    @media (min-width: 720px) {
+    width: 200px;
+  }
+
+  }}
+  
+  
+@media (min-width: 720px) {
+  .cta {
+    flex: 0;
+  }
+}
+```
+- update [Profile](frontend/src/pages/profile/Profile.tsx)
+```tsx
+import React, { useState } from 'react'
+import AccountTransaction from '../../components/accountTransaction/AccountTransaction'
+import styles from "./profile.module.scss"
+import { useDispatch, useSelector } from 'react-redux'
+import { StateProps } from '../../components/login/LoginForm'
+import Welcome from '../../components/welcome/Welcome'
+const Profile = () => {
+    const [edit, setEdit] = useState(false)
+
+
+    const { firstName, lastName, token } = useSelector((state: StateProps) => state.auth)
+    console.log("🚀 ~ file: LoginForm.tsx:30 ~ sto:", { lastName, firstName, token })
+    // const dispatch = useDispatch();
+
+    return (
+        <div className={styles.profile}>
+            <Welcome firstName={firstName} lastName={lastName} />
+            <button className={styles.button}>Edit Name</button>
+            <AccountTransaction accountTitle="Argent Bank Checking (x8349)" accountAmount="$2,082.79" accountAmountDescription="Available Balance" />
+            <AccountTransaction accountTitle="Argent Bank Savings (x6712)"
+                accountAmount="$10,928.42" accountAmountDescription="Available Balance" />
+            <AccountTransaction accountTitle="Argent Bank Credit Card (x8349)"
+                accountAmount="$184.30"
+                accountAmountDescription="Current Balance" />
+        </div>
+    )
+}
+
+export default Profile
+```
 ### 15.
 ### 16.
 ### 17.
