@@ -952,7 +952,19 @@ export const updateUserName = createAsyncThunk(
 
 ```
 
-### 17.
+### 17. Update backend by adding RememberMe
+- update token `expiresIn`  value in [loginUser](backend/controllers/userController.js)
+
+```js
+// creation of token
+    const expiresIn = rememberMe ? 60 * 60 * 24 : 60 * 60; // 1 jour ou 1 heure
+
+    const token = jwt.sign(
+      { id: user._id },
+      process.env.SECRET_KEY || 'default-secret-key',
+      { expiresIn: expiresIn }
+    ) 
+```
 ### 18.
 ### 19.
 
