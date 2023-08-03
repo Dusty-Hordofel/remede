@@ -762,8 +762,51 @@ const Profile = () => {
 
 export default Profile
 ```
-### 15.
+### 15. Update User Profile
+
+- [updateUserProfile](backend/controllers/userController.js)
+```ts
+
+exports.updateUserProfile = async (req,res) => {
+
+  const {firstName,lastName} = req.body;
+  
+  try {
+    const jwtToken = req.headers.authorization.split('Bearer')[1].trim()
+    const decodedJwtToken = jwt.decode(jwtToken)
+    const user = await User.findOneAndUpdate(
+      { _id: decodedJwtToken.id },
+      {
+        firstName,
+        lastName
+      },
+      { new: true }
+    )
+
+    if (!user) {
+      throw new Error('User not found!')
+    }
+
+    return  res.status(201).json({user})
+  } catch (error) {
+    console.error('Error in userService.js', error)
+    return  res.status(400).json({message:error})
+  }
+}
+
+
+```
+
 ### 16.
+- []()
+```ts
+```
+- []()
+```ts
+```
+- []()
+```ts
+```
 ### 17.
 ### 18.
 ### 19.

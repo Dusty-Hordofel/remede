@@ -9,14 +9,14 @@ const dbConnection = require('./database/connection')
 dotEnv.config()
 
 const app = express()
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT || 3080
 
 // Connect to the database
 dbConnection()
 
 // Handle CORS issues
 const corsOptions ={
-  origin:['http://localhost:3000','http://localhost:5173/login','http://localhost:5173','*'], 
+  origin:[,process.env.URL1,process.env.URL2,process.env.URL3,'*'], 
   credentials:true,            //access-control-allow-credentials:true, allow cookies to be sent
   optionSuccessStatus:200
 }

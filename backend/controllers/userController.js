@@ -81,35 +81,34 @@ exports.getUserProfile = async (req, res) => {
 }
 
 
-// exports.getUserProfile = async (req, res) => {
-//   try {
-//     const user = await User.findById(req.userId);
-
-//     if (!user) {
-//       return res.status(404).json({ message: 'User not found' });
-//     }
-
-//     res.json({ user });
-//   } catch (error) {
-//     console.error('Error retrieving user profile', error);
-//     res.status(500).json({ message: 'Internal server error' });
-//   }
-// }
 
 
-module.exports.updateUserProfile = async (req, res) => {
-  let response = {}
 
+exports.updateUserProfile = async (req,res) => {
+
+  const {firstName,lastName} = req.body;
+  
   try {
-    const responseFromService = await userService.updateUserProfile(req)
-    response.status = 200
-    response.message = 'Successfully updated user profile data'
-    response.body = responseFromService
-  } catch (error) {
-    console.log('Error in updateUserProfile - userController.js')
-    response.status = 400
-    response.message = error.message
-  }
+    const jwtToken = req.headers.authorization.split('Bearer')[1].trim()
+    const decodedJwtToken = jwt.decode(jwtToken)
+    const user = await User.findOneAndUpdate(
+      { _id: decodedJwtToken.id },
+      {
+        firstName,
+        lastName
+      },
+      { new: true }
+    )
 
-  return res.status(response.status).send(response)
+    if (!user) {
+      throw new Error('User not found!')
+    }
+
+    return  res.status(201).json({user})
+  } catch (error) {
+    console.error('Error in userService.js', error)
+    return  res.status(400).json({message:error})
+    // throw new Error(error)
+  }
 }
+
