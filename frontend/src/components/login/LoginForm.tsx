@@ -5,6 +5,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { LoginFormSchema, LoginFormValues } from '../../validators/schema-validator';
 import styles from './loginForm.module.scss';
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from '../../features/auth/authSlice';
 
 // type FormValues = {
 //     username: string;
@@ -17,8 +19,23 @@ import axios from "axios";
 //     password: z.string().nonempty('Le mot de passe est requis.'),
 //     rememberMe: z.boolean(), // Add the rememberMe field in the Zod schema
 // });
+export interface StateProps {
+    token: string,
+    email: string,
+    password: string,
+    firstName: string,
+    lastName: string,
+    auth: any;
+}
+
 
 const LoginForm: React.FC = () => {
+
+    const { firstName, lastName, token } = useSelector((state: StateProps) => state.auth)
+    console.log("🚀 ~ file: LoginForm.tsx:30 ~ sto:", { lastName, firstName, token })
+    const dispatch = useDispatch();
+
+
     const {
         handleSubmit,
         register,
@@ -31,18 +48,7 @@ const LoginForm: React.FC = () => {
     });
 
     const onSubmit: SubmitHandler<LoginFormValues> = async (data) => {
-        // You can directly access the data object which includes the checkbox value
-        const { email, password } = data
-        console.log("🚀 ~ file: LoginForm.tsx:36 ~ constonSubmit:SubmitHandler<LoginFormValues>= ~ email:", { email, password })
-        try {
-            const response = await axios.post("http://localhost:3001/api/v1/user/login", { email, password }, { withCredentials: true });
-
-            console.log('Réponse de l\'API:', response.data);
-
-        } catch (error) {
-            console.log("🚀 ~ file: LoginForm.tsx:41 ~ constonSubmit:SubmitHandler<LoginFormValues>= ~ error:", error)
-        }
-
+        dispatch(login(data))
     };
 
     return (

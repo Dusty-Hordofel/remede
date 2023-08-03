@@ -422,12 +422,537 @@ exports.getUserProfile = async (req, res) => {
 
 ## Section 3: Redux Toolkit
 
-8. 
+### 11. Store  
 
 - install redux toolkit
   
 ```bash
 $ npm i @reduxjs/toolkit react-redux redux-persist
 ```
-- update Backend Folder
+- create [store](frontend/src/app/store.ts)
+```ts
+import { configureStore } from "@reduxjs/toolkit";
+import authReducer from '../features/auth/authSlice';
+import storage from 'redux-persist/lib/storage'
+import {
+  persistStore,
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from "redux-persist";
+
+const persistConfig = {
+  key: "root",
+  version: 1,
+   storage: storage,
+};
+
+const persistedReducer = persistReducer(persistConfig, authReducer);
+
+export const store = configureStore({
+  reducer: {
+    auth: persistedReducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
+});
+
+export let persistor = persistStore(store);
+
+// Infer the `RootState` and `AppDispatch` types from the store itself
+export type RootState = ReturnType<typeof store.getState>;
+// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
+export type AppDispatch = typeof store.dispatch;
+
+```
+- create [AuthSlice](frontend/src/features/auth/authSlice.ts)
+```ts
+import { createSlice, nanoid, createAsyncThunk } from '@reduxjs/toolkit'
+
+
+interface UserState { 
+    token:string
+    email: string,
+    password: string,
+  }
+
+const initialState: UserState = {
+    token:"",
+    email: "",
+    password: "",
+    
+  };
+
+  export const authSlice = createSlice({
+  name: "auth",
+  initialState,
+  reducers: {
+    userInfos: (state, action) => {
+        state.token = action.payload.token
+        state.email = action.payload.email;
+        state.password = action.payload.password;
+      },
+  }})
+
+
+  export const {
+    userInfos
+  } = authSlice.actions;
+  export default authSlice.reducer;
   
+```
+- add Store [Provider](frontend/src/main.tsxfrontend/src/main.tsx)
+```ts
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App.tsx'
+import { Provider as ReduxProvider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import { persistor, store } from './app/store.ts';
+
+
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <ReduxProvider store={store}>
+      <PersistGate persistor={persistor} loading={null}>
+        <App />
+      </PersistGate>
+    </ReduxProvider>
+  </React.StrictMode>,
+)
+
+``` 
+### 12. user authentication
+
+-  create [login](frontend/src/features/auth/authSlice.js)
+```ts
+  export const login = createAsyncThunk("auth/login",async(data, { rejectWithValue } ) => {
+    const {email,password} = data
+
+    try{
+      const response = await axios.post(`${url}/login`, { email, password }, { withCredentials: true });
+       const { token } = response.data
+   
+      if(token){
+        const userData = await getUserData(token)
+        const {lastName,firstName} = userData
+
+         const userPayload = {
+          token: token, 
+          firstName: firstName, 
+          lastName: lastName 
+      }
+        
+      return userPayload
+
+      }
+
+    }catch(error){
+      console.log("🚀 ~ file: authSlice.ts:22 ~ login ~ error:", error)
+      return rejectWithValue({message:error});
+      
+    }
+
+
+  })
+
+```
+-  create [login](frontend/src/features/auth/authSlice.js)
+```js
+  async function getUserData(token) {
+    try {
+        const response = await fetch(
+            `${url}/profile`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        )
+        const data = await response.json() 
+        return data
+        // return userInfo
+    } catch ( error ) {
+        console.log(error)
+    }
+}
+```
+
+### 13. Header
+- update [Header](frontend/src/components/header/Header.tsx)
+- 
+```tsx
+import Logo from './logo/Logo'
+
+import logo from "../../assets/argentBankLogo.png"
+import { NavLink } from 'react-router-dom'
+import { BiSolidUserCircle } from 'react-icons/bi'
+import { FaUserCircle, FaSignOutAlt } from 'react-icons/fa'
+import styles from './header.module.scss'
+import { useSelector } from 'react-redux'
+import { StateProps } from '../login/LoginForm'
+
+
+const Header = () => {
+    const { firstName, token } = useSelector((state: StateProps) => state.auth)
+    return (
+        <nav className={styles.nav}>
+            <Logo src={logo} title='Argent Bank' alt="Argent Bank Logo" width={200} height={54.383} />
+            {!token ? (<NavLink to="/login" className={styles.navLink} >
+                <BiSolidUserCircle style={{ fontSize: '24px' }} /> Sign In
+            </NavLink>) : (
+                <div className={styles.links}>
+
+                    <NavLink to="/" className={styles.navLink}  >
+                        <div className={styles.logout}>
+                            <FaUserCircle style={{ fontSize: '24px' }} /> {firstName}
+                        </div>
+
+                    </NavLink>
+                    <NavLink to="/" className={styles.navLink}  >
+
+                        <div className={styles.logout}>
+                            <FaSignOutAlt style={{ fontSize: '24px' }} /> Sign Out
+                        </div>
+                    </NavLink>
+                </div>
+            )}
+        </nav>
+    )
+}
+
+export default Header
+```
+### 14. AccountTransaction
+
+- create [AccountTransaction](frontend/src/components/accountTransaction/AccountTransaction.tsx)
+
+```tsx
+import classNames from "classnames"
+import { AccountTransactionProps } from "../../../type"
+import styles from "./accountTransaction.module.scss"
+
+const AccountTransaction: React.FC<AccountTransactionProps> = ({ accountTitle, accountAmount, accountAmountDescription }) => {
+    return (
+        <section className={styles.account}>
+            <div className={styles.content}>
+                <h3 className={styles.title}>{accountTitle}</h3>
+                <p className={styles.amount}>{accountAmount}</p>
+                <p className={styles.description}>{accountAmountDescription}</p>
+            </div>
+            <div className={classNames(styles.ol)}>
+                <button className={styles.button}>View transactions</button>
+            </div>
+        </section>
+    )
+}
+
+export default AccountTransaction
+```
+
+- style [AccountTransaction](frontend/src/components/accountTransaction/accountTransaction.module.scss)
+
+```scss
+.account {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid black;
+    background-color: #fff;
+    width: 80%;
+    margin: 0 auto;
+    flex-direction: column;
+    padding: 1.5rem;
+    box-sizing: border-box;
+    text-align: left;
+    margin-bottom: 2rem;
+
+    @media (min-width: 720px) {
+        flex-direction: row;
+  }
+
+      
+  .content {
+    width: 100%;
+    flex: 1;
+    .amount {
+      margin: 0;
+      font-size: 4rem;
+      font-weight: 600;
+      color:rgb(44, 62, 80);
+      padding: 1rem
+  
+  }}
+    
+    .description {
+      margin: 0;
+    }
+    
+    .title,.description {
+      margin: 0;
+      padding: 0;
+      font-size: 1rem;
+      font-weight: normal;
+  }
+
+  .button {
+    display: block;
+    width: 100%;
+    padding: 13px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-top: 1rem;
+    border-color: #00bc77;
+    background-color: #00bc77;
+    color: #fff;
+
+    @media (min-width: 720px) {
+    width: 200px;
+  }
+
+  }}
+  
+  
+@media (min-width: 720px) {
+  .cta {
+    flex: 0;
+  }
+}
+```
+- update [Profile](frontend/src/pages/profile/Profile.tsx)
+```tsx
+import React, { useState } from 'react'
+import AccountTransaction from '../../components/accountTransaction/AccountTransaction'
+import styles from "./profile.module.scss"
+import { useDispatch, useSelector } from 'react-redux'
+import { StateProps } from '../../components/login/LoginForm'
+import Welcome from '../../components/welcome/Welcome'
+const Profile = () => {
+    const [edit, setEdit] = useState(false)
+
+
+    const { firstName, lastName, token } = useSelector((state: StateProps) => state.auth)
+    console.log("🚀 ~ file: LoginForm.tsx:30 ~ sto:", { lastName, firstName, token })
+    // const dispatch = useDispatch();
+
+    return (
+        <div className={styles.profile}>
+            <Welcome firstName={firstName} lastName={lastName} />
+            <button className={styles.button}>Edit Name</button>
+            <AccountTransaction accountTitle="Argent Bank Checking (x8349)" accountAmount="$2,082.79" accountAmountDescription="Available Balance" />
+            <AccountTransaction accountTitle="Argent Bank Savings (x6712)"
+                accountAmount="$10,928.42" accountAmountDescription="Available Balance" />
+            <AccountTransaction accountTitle="Argent Bank Credit Card (x8349)"
+                accountAmount="$184.30"
+                accountAmountDescription="Current Balance" />
+        </div>
+    )
+}
+
+export default Profile
+```
+### 15. Update User Profile
+
+- [updateUserProfile](backend/controllers/userController.js)
+```ts
+
+exports.updateUserProfile = async (req,res) => {
+
+  const {firstName,lastName} = req.body;
+  
+  try {
+    const jwtToken = req.headers.authorization.split('Bearer')[1].trim()
+    const decodedJwtToken = jwt.decode(jwtToken)
+    const user = await User.findOneAndUpdate(
+      { _id: decodedJwtToken.id },
+      {
+        firstName,
+        lastName
+      },
+      { new: true }
+    )
+
+    if (!user) {
+      throw new Error('User not found!')
+    }
+
+    return  res.status(201).json({user})
+  } catch (error) {
+    console.error('Error in userService.js', error)
+    return  res.status(400).json({message:error})
+  }
+}
+
+
+```
+
+### 16. update User Name
+- [EditNameForm](frontend/src/components/editName/EditNameForm.tsx)
+```ts
+import React from 'react';
+import { useForm } from 'react-hook-form';
+import styles from './editNameForm.module.scss';
+
+interface EditNameFormProps {
+    firstName: string,
+    lastName: string,
+    setEditFistName: React.Dispatch<React.SetStateAction<string>>;
+    setEditLastName: React.Dispatch<React.SetStateAction<string>>;
+
+
+
+}
+function EditNameForm({ firstName, lastName, setEditFistName, setEditLastName }: EditNameFormProps) {
+    const { register, handleSubmit, formState: { errors }, setValue } = useForm();
+
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = event.target;
+        setEditLastName(value);
+        // setValue(name, value);
+    };
+
+    const onSubmit = (data: any) => {
+        // setEditLastName(data.lastName)
+        console.log(data); // Vous pouvez effectuer ici la logique d'envoi des données, par exemple, en utilisant une requête axios
+    };
+
+    React.useEffect(() => {
+        setValue('firstName', firstName);
+        setValue('lastName', lastName);
+    }, [setValue]);
+
+    return (
+        <div>
+            <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+                <div className={styles.name}>
+                    <div className={styles.input}>
+                        <label htmlFor="lastName">lastName:</label>
+                        <input
+                            type="text"
+                            id="lastName"
+                            {...register('lastName', {
+                                required: true,
+                                minLength: 2,
+                                pattern: /^[A-Za-z\s]*$/,
+                            })}
+                            onChange={handleInputChange}
+                        />
+                        {errors.lastName && (
+                            <p style={{ color: 'red' }}>
+                                {errors.lastName.type === 'required' && 'Le nom de famille est requis'}
+                                {errors.lastName.type === 'minLength' && 'Le nom de famille doit comporter au moins 2 caractères'}
+                                {errors.lastName.type === 'pattern' && 'Le nom de famille ne doit pas contenir de symboles'}
+                            </p>
+                        )}
+                    </div>
+
+                    <button type="submit">Save</button>
+                </div>
+            </form>
+        </div>
+    );
+}
+
+export default EditNameForm;
+
+```
+- [editNameForm](frontend/src/components/editName/editNameForm.module.scss)
+```ts
+
+.form{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin-bottom: 2rem;
+
+    .name{
+         display: flex;
+         align-items: center;
+         justify-content: center;
+        // background: rebeccapurple;
+        gap:3rem;
+        color:white;
+    
+        .input{
+            label{
+                display: block;
+                margin-right: 10px;
+                padding:20px;
+                width: fit-content;
+            }
+    
+            // .inputGroup{
+            //     df
+            // }
+    
+                
+            input{
+                padding: 1rem;
+                outline: none;    
+            }
+    
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    
+        button{
+     width: fit-content;
+      border-color: rgb(0, 188, 119);
+      background-color: rgb(0, 188, 119);
+      color: rgb(255, 255, 255);
+      font-weight: bold;
+      padding: 1.5rem 2.5rem;
+        }
+    }
+}
+```
+- [updateUserName](frontend/src/features/auth/authSlice.js)
+```ts
+
+export const updateUserName = createAsyncThunk(
+  "auth/updateUserName",
+  async(data, { rejectWithValue } ) => {
+    const {firstName,lastName,token} = data
+    // const updatedUser = {email,password}
+    console.log("🚀 ~ file: authSlice.js:78 ~ async ~ data:", data)
+
+    try {
+      const response = await fetch(
+          `${url}/profile`,
+          {
+              method: 'PUT',
+              headers: {
+                  'Content-type': 'application/json',
+                  'Authorization': `Bearer ${token}`
+              },
+              body: JSON.stringify({firstName,lastName})
+          }
+      )
+      const data = await response.json() 
+      console.log("🚀 ~ file: authSlice.js:93 ~ async ~ data:", data)
+      return data
+  } catch (error) {
+      console.log(error)
+      return rejectWithValue({message:error});
+  }
+  }
+)
+
+```
+
+### 17.
+### 18.
+### 19.
+
