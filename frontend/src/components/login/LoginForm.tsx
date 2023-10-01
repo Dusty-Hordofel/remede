@@ -1,12 +1,11 @@
 import React from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-// import { z } from 'zod';
-import { LoginFormSchema, LoginFormValues } from '../../validators/schema-validator';
+import { useForm, SubmitHandler } from 'react-hook-form';//useForm est un hook qui permet de gérer les formulaires dans React, SubmitHandler est un type qui permet de typer la fonction onSubmit
+import { zodResolver } from '@hookform/resolvers/zod'; //importer zodResolver pour valider les données du formulaire
+import { LoginFormSchema, LoginFormValues } from '../../validators/schema-validator';//importer le schéma de validation
 import styles from './loginForm.module.scss';
-import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
-import { login } from '../../features/auth/authSlice';
+import { useDispatch, useSelector } from "react-redux";//useDispatch et useSelector sont importés depuis react-redux pour interagir avec le store Redux.
+import { login } from '../../features/auth/authSlice';//importer l'action login
+//zod est une bibliothèque de validation de schéma de données
 
 // type FormValues = {
 //     username: string;
@@ -19,6 +18,7 @@ import { login } from '../../features/auth/authSlice';
 //     password: z.string().nonempty('Le mot de passe est requis.'),
 //     rememberMe: z.boolean(), // Add the rememberMe field in the Zod schema
 // });
+
 export interface StateProps {
     token: string,
     email: string,
@@ -26,31 +26,31 @@ export interface StateProps {
     firstName: string,
     lastName: string,
     auth: any;
-}
+} //interface StateProps est utilisée pour définir le type des données du state
 
 
 const LoginForm: React.FC = () => {
 
-    const { firstName, lastName, token } = useSelector((state: StateProps) => state.auth)
+    const { firstName, lastName, token } = useSelector((state: StateProps) => state.auth)//récupérer les données du state grace à useSelector qui prend en paramètre le state et retourne les données du state auth dans l'objet state qui se trouve dans le store
     console.log("🚀 ~ file: LoginForm.tsx:30 ~ sto:", { lastName, firstName, token })
-    const dispatch = useDispatch();
+    const dispatch = useDispatch();//dispatch permet d'envoyer une action au store ou de déclencher une action dans le store
 
 
     const {
-        handleSubmit,
-        register,
-        formState: { errors },
+        handleSubmit,//handleSubmit est une fonction qui permet de gérer la soumission du formulaire
+        register,//register est une fonction qui permet d'enregistrer les champs du formulaire
+        formState: { errors },//errors est un objet qui contient les erreurs de validation
     } = useForm<LoginFormValues>({
         resolver: zodResolver(LoginFormSchema),
         defaultValues: {
             rememberMe: false,
-        },
-    });
+        },//defaultValues permet de définir les valeurs par défaut des champs du formulaire
+    });//utiliser le hook useForm pour gérer le formulaire
 
     const onSubmit: SubmitHandler<LoginFormValues> = async (data) => {
         console.log("🚀 ~ file: LoginForm.tsx:51 ~ constonSubmit:SubmitHandler<LoginFormValues>= ~ data:", data)
-        dispatch(login(data))
-    };
+        dispatch(login(data))//dispatch permet d'envoyer une action au store ou de déclencher une action dans le store
+    };//onSubmit est une fonction qui permet de gérer la soumission du formulaire
 
     return (
         <div className={styles.form}>
@@ -82,85 +82,3 @@ const LoginForm: React.FC = () => {
 
 export default LoginForm;
 
-
-// import React from 'react';
-// import { useForm, Controller } from 'react-hook-form';
-// import { zodResolver } from '@hookform/resolvers/zod';
-// import { LoginFormValues, loginFormSchema } from '../../validators/schema-validator';
-// import styles from './loginForm.module.scss';
-// import { BiCheckbox } from 'react-icons/bi';
-
-// const LoginForm: React.FC = () => {
-//     const {
-//         control,
-//         handleSubmit,
-//         formState: { errors },
-//     } = useForm<LoginFormValues>({
-//         resolver: zodResolver(loginFormSchema),
-//     });
-
-//     const onSubmit = (data: LoginFormValues) => {
-//         // Vous pouvez gérer la logique de connexion ici
-//         console.log(data);
-//     };
-
-//     return (
-//         <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-//             <div>
-//                 <label>Email</label>
-//                 <Controller
-//                     name="email"
-//                     control={control}
-//                     defaultValue=""
-//                     render={({ field }) => (
-//                         <input
-//                             type="text"
-//                             {...field}
-//                         />
-//                     )}
-//                 />
-//                 {errors.email && <p>{errors.email.message}</p>}
-//             </div>
-
-//             <div>
-//                 <label>Password</label>
-//                 <Controller
-//                     name="password"
-//                     control={control}
-//                     defaultValue=""
-//                     render={({ field }) => (
-//                         <input
-//                             type="password"
-//                             {...field}
-//                         />
-//                     )}
-//                 />
-//                 {errors.password && <p>{errors.password.message}</p>}
-//             </div>
-
-//             <div>
-//                 {/* <label > */}
-//                 <Controller
-//                     name="rememberMe"
-//                     control={control}
-//                     defaultValue={false}
-//                     render={({ field }) => (
-//                         <input
-//                             type="checkbox"
-//                             {...field}
-//                             onChange={(e) => field.onChange(e.target.checked)}
-//                         />
-//                     )}
-//                 />
-
-//                 <label>Remember Me</label>
-//                 {/* </label> */}
-//                 {errors.rememberMe && <p>Remember Me is required</p>}
-//             </div>
-
-//             <button type="submit">Login</button>
-//         </form>
-//     );
-// };
-
-// export default LoginForm;
