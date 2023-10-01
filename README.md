@@ -1031,4 +1031,6 @@ const token = jwt.sign(
 
 ### 18. Update Project
 
-### 19.
+### 19. Add Swagger phase 2
+
+### 20. Add sr_only css content
