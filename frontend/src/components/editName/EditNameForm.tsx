@@ -39,10 +39,10 @@ function EditNameForm({ firstName, lastName, setEditFistName, setEditLastName, s
         // console.log(data); // Vous pouvez effectuer ici la logique d'envoi des données, par exemple, en utilisant une requête axios
     };
 
-    React.useEffect(() => {
-        setValue('firstName', firstName);
-        setValue('lastName', lastName);
-    }, [setValue]);
+    // React.useEffect(() => {
+    //     setValue('firstName', firstName);
+    //     setValue('lastName', lastName);
+    // }, [setValue]);
 
     return (
         <div>
