@@ -5,7 +5,7 @@ const Hero = () => {
     return (
         <div className={styles.hero}>
             <section className={styles.content}>
-                <h2 className={classNames("sr-only", styles.srOnly)}>Promoted Content</h2>
+                <h2 className={classNames("sr-only", styles.sr_only)}>Promoted Content</h2>
                 <p className={styles.subtitle}>No fees.</p>
                 <p className={styles.subtitle}>No minimum deposit.</p>
                 <p className={styles.subtitle}>High interest rates.</p>
