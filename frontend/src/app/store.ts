@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
-import authReducer from '../features/auth/authSlice';
-import storage from 'redux-persist/lib/storage'
+import authReducer from "../features/auth/authSlice";
+import storage from "redux-persist/lib/storage";
 import {
   persistStore,
   persistReducer,
@@ -15,7 +15,7 @@ import {
 const persistConfig = {
   key: "root",
   version: 1,
-   storage: storage,
+  storage: storage,
   //   storage,
 };
 
@@ -36,6 +36,6 @@ export const store = configureStore({
 export let persistor = persistStore(store);
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
-export type RootState = ReturnType<typeof store.getState>;
+export type RootState = ReturnType<typeof store.getState>; // déduit le type de l'état global à partir du store
 // Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
 export type AppDispatch = typeof store.dispatch;
